@@ -1,0 +1,90 @@
+
+html, body {
+    padding: 0px;
+    margin: 0px;
+}
+
+header, section {
+    clear: both;
+}
+
+.back {
+    margin-left: 5px;
+    margin-top: 5px;
+    height: 28px;
+    width: 15px;
+    float: left;
+    padding: 5px;
+}
+
+.msg {
+    float: left;
+    margin-top: 5px;
+    height: 30px;
+    line-height: 30px;
+    padding: 5px;
+}
+
+
+
+.flist {
+    margin-left: 15px;
+    margin-right:15px;
+}
+
+.touxiang {
+    margin-top: 10px;
+    width: 200px;
+    height: 200px;
+}
+
+.name {
+    color: #2a2e32;
+    font-size: 1.8em;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.info {
+    color: #2a2e32;
+    height: 30px;
+    font-size: 1em;
+}
+
+.btn {
+    width: 100%;
+    text-align: center;
+}
+
+.btnn {
+    margin: 10px 0;
+    outline: none;
+}
+
+.sendmsg {
+    color: #fff;
+    background: #ff390b;
+    height: 50px;
+    border: 0;
+    border-radius: 25px;
+    line-height: 50px;
+    width: 80%;
+    text-align: center;
+    font-size: 1.3em;
+}
+
+.sendinfo {
+    color: #fff;
+    height: 50px;
+    background: #2487ff;
+    border: 0;
+    border-radius: 25px;
+    width: 80%;
+    text-align: center;
+    line-height: 50px;
+    font-size: 1.3em;
+}
+
+.realstatus {
+    color: #ff390b;
+}

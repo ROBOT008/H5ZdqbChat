@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>好友资料</title>
+    <link href="../css/h5sql.css" rel="stylesheet">
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <style>
+
+        .seachAll {
+            margin-left: 13px;
+            margin-right: 13px;
+        }
+
+        input.seach {
+            outline: none;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 89%;
+            height: 40px;
+            background: #f3f5f8;
+            border-radius: 25px;
+            border: 0;
+
+            background-size: 25px 25px; /*小图标的大小*/
+            background-position: 10px 12px; /*小图标在input的位置*/
+            background-repeat: no-repeat; /*背景小图标不重复*/
+            padding: 2px 0px 2px 40px;
+        }
+
+        input::-webkit-input-placeholder {
+            padding: 0px 0px 0px 40px; /*设置input内边距*/
+            font-size: 15px;
+        }
+
+
+        .dlist {
+            list-style-type: none;
+            padding: 0px;
+            margin: 0px;
+            height: 350px;
+            margin-left: 10px;
+            margin-right: 10px;
+            overflow-y:scroll;
+            border: 1px dashed #cdd2d8;
+        }
+
+        .dlist li {
+            height: 30px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <img class="back" src="../img/nav_back_black.png">
+    <div class="msg"></div>
+</header>
+<section>
+    <div class="flist">
+        <div class="seachAll">
+            <input class="seach" type="text" id="msgd" placeholder="请输入您的验证消息"/>
+        </div>
+        <div class="btn">
+            <button class="btnn sendmsg" type="button" id="saveMsg">保存数据</button>
+            <button class="btnn sendinfo" type="button" id="fixMsg">修改数据</button>
+            <button class="btnn sendinfo" type="button" id="delMsg">删除数据</button>
+            <button class="btnn sendinfo" type="button" id="selectMsg">查询所有</button>
+        </div>
+
+        <div class="data" >
+            <ul class="dlist">
+                <!--<li>id:name<==>pass:info</li>-->
+                <!--{{item.id}}:{{item.name}}<==>{{item.password}}:{{item:info}}-->
+                <!--<li v-for="item in chatList" v-text="item.id : item.username <===> item.password:item.info"> </li>-->
+                <li v-for="item in chatList" v-text="item.id +':'+ item.username +'<===>'+item.password +':'+ item.info "> </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="H5Sql.js"></script>
+<script>
+    var dateVue = new Vue({
+        el:'.data',
+        data:{
+            chatList:[]
+        },
+        method:{
+
+        }
+    });
+
+
+
+    /**
+     * 创建数据库 或者此数据库已经存在 那么就是打开数据库
+     * name: 数据库名称
+     * version: 版本号
+     * displayName: 对数据库的描述
+     * estimatedSize: 设置数据的大小
+     */
+    let db = openDatabase("chat", "1.0", "保存聊天记录", 1024 * 1024);
+
+    let t_name = "chat_msg";
+    let result = db ? "数据库创建成功" : "数据库创建失败";
+    console.log(result);
+
+
+    //查询所有
+    const QUERY_USER_SQL = "select * from " + t_name;
+
+    const USER_TABLE_SQL = "create table if not exists " + t_name + " (id integer primary key autoincrement,username varchar(12),password varchar(16),info text)";
+    createTable(USER_TABLE_SQL,function (res) {
+        // console.log('成功USER_TABLE_SQL', res)
+        selectMsg();
+    },function (e) {
+        console.log('失败USER_TABLE_SQL', e)
+    });
+
+    $("#saveMsg").bind("click", function () {
+        const INSERT_USER_SQL = "insert into " + t_name + " (username, password,info) values(?,?,?)";
+        var msgd = $("#msgd").val();
+        console.log(msgd)
+        var user = {
+            username: "liuqiang",
+            password: "123569874",
+            info: msgd
+        }
+        insertData(INSERT_USER_SQL, user, function (res) {
+            console.log('成功INSERT_USER_SQL', res)
+            selectMsg();
+        }, function (e) {
+            console.log('失败INSERT_USER_SQL', e)
+        })
+    })
+
+
+    $("#fixMsg").bind("click", function () {
+        const UPDATE_USER_SQL = "update " + t_name + " set password = ? where id = ? ";
+        var user = {
+            password: 'abc',
+            id: 6
+        }
+        updateData(UPDATE_USER_SQL, user, function (res) {
+            console.log('成功UPDATE_USER_SQL', res)
+            selectMsg();
+        }, function (e) {
+            console.log('失败UPDATE_USER_SQL', e)
+        })
+    })
+
+    $("#delMsg").bind("click", function () {
+        // const DELETE_USER_SQL = "delete from " + t_name + " where username = ? ";
+        const DELETE_USER_SQL = "delete from " + t_name + " where id = ? ";
+        var user = {
+            id:'6'
+        }
+        deleteData(DELETE_USER_SQL, user, function (res) {
+            console.log('成功DELETE_USER_SQL', res)
+            selectMsg();
+        }, function (e) {
+            console.log('失败DELETE_USER_SQL', e)
+        });
+    })
+
+    $("#selectMsg").bind("click", function () {
+        selectMsg();
+    })
+
+    function selectMsg() {
+        queryData(QUERY_USER_SQL, function (res) {
+            // console.log("查询成功QUERY_USER_SQL", res)
+            dateVue.chatList = res
+        }, function (e) {
+            console.log("查询失败QUERY_USER_SQL", e)
+        })
+    }
+
+
+</script>
+</body>
+</html>

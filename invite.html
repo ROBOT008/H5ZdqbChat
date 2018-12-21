@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>邀请好友</title>
+    <link href="./css/invite.css" rel="stylesheet">
+    <script src="./js/jquery-3.3.1.min.js"  type="application/javascript"></script>
+    <script src="./js/vue.js" type="application/javascript"></script>
+    <script src="./js/common.js" type="application/javascript"></script>
+    <style>
+        .sicon {
+            height: 20px;
+            width: 20px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img class="back" src="./img/nav_back_black.png">
+    <div class="msg">邀请好友</div>
+    <div class="rightIcon">
+        <div class="complete">完成</div>
+    </div>
+</header>
+<section>
+    <div class="flist">
+        <ul class="ulflist">
+            <li v-for="item in flist" >
+                <img class="touxiang" :src="imgpath+item.friendUserHeadUrl">
+                <div class="name" v-text="item.nickName"></div>
+                <div class="selecticon"><img class="sicon" lang="0" @click="selectItem($event,item)"
+                                             src="./img/weixuanzhong3.png"></div>
+            </li>
+        </ul>
+    </div>
+</section>
+<script>
+    var groupChatId = localStorage.getItem("groupChatId");
+    var flistVue = new Vue({
+        el: '.flist',
+        data: {
+            flist:[],
+            imgpath:imgurl,
+            faddList:[]
+        },
+        methods: {
+            selectItem(DomEvent,item){
+                var tc = DomEvent.currentTarget;
+                var lang = $(tc).attr("lang");
+                if (lang == 0) {
+                    $(tc).attr("src", "./img/success3.png");
+                    $(tc).attr("lang", "1");
+                    flistVue.faddList.push(item);
+                } else {
+                    $(tc).attr("src", "./img/weixuanzhong3.png");
+                    $(tc).attr("lang", "0");
+                    flistVue.faddList.remove(item);
+                }
+            }
+        },
+        watch:{
+            faddList() {
+                var ts = this;
+                if(ts.faddList.length > 0){
+                    $(".complete").css("display","block");
+                }else{
+                    $(".complete").css("display","none");
+                }
+            }
+        }
+    });
+
+    // var fdd = [
+    //     {"nickName":1,"friendUserHeadUrl":'group1/M00/00/00/rBLB3lsGLGqAOF6ZAAAfbtNR5t0919_big.png'},
+    //     {"nickName":2,"friendUserHeadUrl":'group1/M00/00/00/rBLB3lsGLGqAOF6ZAAAfbtNR5t0919_big.png'},
+    //     {"nickName":3,"friendUserHeadUrl":'group1/M00/00/00/rBLB3lsGLGqAOF6ZAAAfbtNR5t0919_big.png'},
+    //     {"nickName":4,"friendUserHeadUrl":'group1/M00/00/00/rBLB3lsGLGqAOF6ZAAAfbtNR5t0919_big.png'},
+    //     {"nickName":5,"friendUserHeadUrl":'group1/M00/00/00/rBLB3lsGLGqAOF6ZAAAfbtNR5t0919_big.png'}
+    // ]
+    // flistVue.flist = fdd;
+
+    /**
+     * 获取审核通过的好友
+     */
+    if (!isDeBug) {
+        setContactFun("PASS");
+    }
+
+    $(".back").bind("click", function () {
+        backHis();
+    });
+
+    /**
+     * 点击完成
+     */
+    $(".complete").bind("click", function () {
+        console.log(flistVue.faddList);
+        var data = {
+            "groupChatId":groupChatId,
+            "list":flistVue.faddList
+        };
+         setInviteFriend(data);
+    });
+</script>
+</body>
+</html>

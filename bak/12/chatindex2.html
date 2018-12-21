@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>消息</title>
+    <link href="../../css/chatindex.css" rel="stylesheet">
+    <script src="../../js/jquery-3.3.1.min.js" type="application/javascript"></script>
+    <script src="../../js/stomp.min.js" type="application/javascript"></script>
+    <script src="../../js/sockjs.min.js" type="application/javascript"></script>
+    <script src="../sockjsCommonAndSQL.js" type="application/javascript"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+<header>
+    <div class="msg">消息</div>
+    <div class="rightIcon">
+        <img class="ricon" src="../../img/contact3.png">
+    </div>
+</header>
+<section>
+    <div class="seachAll">
+        <input class="seach" type="text" placeholder="搜索"/>
+    </div>
+
+    <div class="flist">
+        <ul class="ulflist">
+            <li lang="10086">
+                <div class="tinfo">
+                    <img class="touxiang" src="../../img/123.png">
+                </div>
+                <div class="info">
+                    <div class="name">10086</div>
+                    <div class="qmsg">赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包</div>
+                </div>
+                <div class="finfo">
+                    <div class="memberd">09-14</div>
+                    <div class="msgnuum">3</div>
+                </div>
+            </li>
+
+            <li lang="2">
+                <div class="tinfo">
+                    <img class="touxiang" src="../../img/123.png">
+                </div>
+                <div class="info">
+                    <div class="name">2</div>
+                    <div class="qmsg">赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包</div>
+                </div>
+                <div class="finfo">
+                    <div class="memberd">09-14</div>
+                    <div class="msgnuum">3</div>
+                </div>
+            </li>
+
+
+        </ul>
+
+
+    </div>
+
+</section>
+<script>
+    var  fid= "2";
+    var  toUserId = "10086";
+
+    $(".tab").bind("click", function () {
+        $(".tab").removeClass("tcolor");
+        $(this).addClass("tcolor")
+    });
+
+    $("ul.ulflist li").bind('click', function () {
+        var lang = $(this).attr("lang");
+        if (lang === "2") {
+            location.href = 'chatTest2.html'
+        } else if (lang === "10086") {
+            location.href = 'chatTest10086.html'
+        }
+    });
+
+
+    function getMsg(res) {
+        console.log('消息列表',res)
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>群成员</title>
+    <link href="./css/invite.css" rel="stylesheet">
+    <script src="./js/jquery-3.3.1.min.js" type="application/javascript"></script>
+    <script src="./js/vue.js" type="application/javascript"></script>
+    <script src="./js/common.js" type="application/javascript"></script>
+    <style>
+        .sicon {
+            height: 20px;
+            width: 20px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img class="back" src="./img/nav_back_black.png">
+    <div class="msg">群成员</div>
+</header>
+<section>
+    <div class="flist">
+        <ul class="ulflist">
+            <li v-for="item in flist">
+                <img class="touxiang" :src="imgpath+item.userHeadUrl">
+                <div class="name" v-text="item.nickName"></div>
+                <!--<div class="selecticon"><img class="sicon" lang="0" @click="selectItem($event,item)"-->
+                <!--src="./img/weixuanzhong3.png"></div>-->
+            </li>
+        </ul>
+    </div>
+</section>
+<script>
+    var groupChatId = localStorage.getItem("groupChatId");
+    var flistVue = new Vue({
+        el: '.flist',
+        data: {
+            flist: [],
+            imgpath: imgurl,
+            faddList: []
+        },
+        methods: {
+            // selectItem(DomEvent,item){
+            //     var tc = DomEvent.currentTarget;
+            //     var lang = $(tc).attr("lang");
+            //     if (lang == 0) {
+            //         $(tc).attr("src", "./img/success3.png");
+            //         $(tc).attr("lang", "1");
+            //         flistVue.faddList.push(item);
+            //     } else {
+            //         $(tc).attr("src", "./img/weixuanzhong3.png");
+            //         $(tc).attr("lang", "0");
+            //         flistVue.faddList.remove(item);
+            //     }
+            // }
+        },
+        watch: {
+            // faddList() {
+            //     var ts = this;
+            //     if(ts.faddList.length > 0){
+            //         $(".complete").css("display","block");
+            //     }else{
+            //         $(".complete").css("display","none");
+            //     }
+            // }
+        }
+    });
+
+    // var fdd = [
+    //     {
+    //         "userId": 909396031,
+    //         "groupChatId": "861895137",
+    //         "unread": 0,
+    //         "nickName": "18978219903",
+    //         "groupName": "跑车VIP群",
+    //         "groupHeadUrl": "group1/M00/00/D8/rBLB3lwbHBqAJryjAAFmTW5uT8c258.jpg",
+    //         "groupNotice": "各种各样跑车",
+    //         "userGrade": "100",
+    //         "verifyMsg": "",
+    //         "userHeadUrl": "group1/M00/00/00/rBLB3lsGLGqAOF6ZAAAfbtNR5t0919_big.png",
+    //         "addStatus": "PASS"
+    //     },{
+    //         "userId": 909396031,
+    //         "groupChatId": "861895137",
+    //         "unread": 0,
+    //         "nickName": "18978219903",
+    //         "groupName": "跑车VIP群",
+    //         "groupHeadUrl": "group1/M00/00/D8/rBLB3lwbHBqAJryjAAFmTW5uT8c258.jpg",
+    //         "groupNotice": "各种各样跑车",
+    //         "userGrade": "100",
+    //         "verifyMsg": "",
+    //         "userHeadUrl": "group1/M00/00/00/rBLB3lsGLGqAOF6ZAAAfbtNR5t0919_big.png",
+    //         "addStatus": "PASS"
+    //     }
+    // ]
+    // flistVue.flist = fdd;
+
+    /**
+     * 获取群成员
+     */
+    if (!isDeBug) {
+        setGroupMember(groupChatId);
+    }
+
+    $(".back").bind("click", function () {
+        localStorage.removeItem("groupChatId");
+        backHis();
+    });
+
+    /**
+     * 点击完成
+     */
+    $(".complete").bind("click", function () {
+        console.log(flistVue.faddList);
+        var data = {
+            "groupChatId": groupChatId,
+            "list": flistVue.faddList
+        };
+        setInviteFriend(data);
+    });
+</script>
+</body>
+</html>

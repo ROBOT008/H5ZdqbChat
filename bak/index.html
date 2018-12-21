@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>好友列表</title>
+    <link href="../css/index.css" rel="stylesheet">
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+<header>
+    <img class="back" src="../img/nav_back_black.png">
+    <div class="msg">好友(300)</div>
+    <div class="rightIcon">
+        <img class="ricon" src="../img/paixu3.png">
+        <img class="ricon addicon" src="../img/add3.png">
+    </div>
+</header>
+<section>
+    <div class="tabAll">
+        <div class="tab tcolor">
+            好友
+        </div>
+        <div class="tab ">
+            赚粉
+        </div>
+        <div class="tab ">
+            群组
+        </div>
+    </div>
+
+    <div class="seachAll">
+        <input class="seach" type="text" placeholder="搜索"/>
+    </div>
+    <div class="flist">
+        <ul class="ulflist">
+            <li>
+                <img class="touxiang" src="../img/biaoqing3.png">
+                <div class="name">黄大仙</div>
+                <div class="time">10分钟前</div>
+            </li>
+
+            <li>
+                <img class="touxiang" src="../img/biaoqing3.png">
+                <div class="name">黄大仙</div>
+                <div class="time">10分钟前</div>
+            </li>
+
+            <li>
+                <img class="touxiang" src="../img/biaoqing3.png">
+                <div class="name">黄大仙</div>
+                <div class="time">10分钟前</div>
+            </li>
+
+            <li>
+                <img class="touxiang" src="../img/biaoqing3.png">
+                <div class="name">黄大仙</div>
+                <div class="time">10分钟前</div>
+            </li>
+
+        </ul>
+
+
+    </div>
+
+</section>
+<script>
+    $(".tab").bind("click", function () {
+        $(".tab").removeClass("tcolor");
+        $(this).addClass("tcolor")
+    });
+
+</script>
+</body>
+</html>

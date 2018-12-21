@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <title>聊天界面</title>
+    <link href="../css/chat.css" rel="stylesheet">
+    <script src="../js/jquery-3.3.1.min.js" type="application/javascript"></script>
+    <script src="../js/vue.js" type="application/javascript"></script>
+    <script src="../js/socket.js" type="application/javascript"></script>
+    <script src="ChatSql.js" type="application/javascript"></script>
+</head>
+<body>
+<header>
+    <img class="back" src="../img/nav_back_black.png">
+    <div class="msg">与<span id="msgid"></span>对话</div>
+</header>
+<section>
+    <ul class="ulflist" id="ulflist">
+        <template v-for="item in chatList">
+            <li v-if="item.toUserId == toid">
+                <img class="rtouxiang" src="../img/biaoqing3.png">
+                <div class="rcmsg" v-text="item.contentText"></div>
+            </li>
+            <li v-else>
+                <img class="touxiang" src="../img/biaoqing3.png">
+                <div class="cmsg" v-text="item.contentText"></div>
+            </li>
+        </template>
+
+
+        <!--<li>-->
+        <!--<img class="touxiang" src="img/biaoqing3.png">-->
+        <!--<div class="cmsg">嗯嗯</div>-->
+        <!--</li>-->
+
+        <!--<li>-->
+        <!--<img class="rtouxiang" src="img/biaoqing3.png">-->
+        <!--<div class="rcmsg">算了</div>-->
+        <!--</li>-->
+
+    </ul>
+
+</section>
+<footer class="footer">
+    <div class="seachAll">
+        <input class="seach" type="text" id="msgVal" placeholder="请在此输入您的消息"/>
+        <button class="expression" type="button" id="sendBtn"></button>
+    </div>
+</footer>
+
+<script>
+    var flag = false;
+    var fid = "0072";
+    var  toid= "100862";
+    var ulflistVue = new Vue({
+        el: '#ulflist',
+        data: {
+            chatList: [],
+            toid: toid,
+            fid: fid
+        },
+        method: {
+            saveChatMsg(msgdate) {
+                ulflistVue.chatList.push(msgdate)
+            },
+            savemsg(msgdate){
+                saveMsgSql(msgdate);
+            }
+        }
+    });
+    $("#msgid").html(toid);
+    var h = window.screen.height - 62 - 50;
+    $(".ulflist").css("max-height", h + "px");
+    openSocket(fid, function (type, res) {
+        if (type == 'onmessage') {
+            // console.log('接收到消息', res)
+            if (res == '"连接成功"') {
+                console.log("====>连接成功")
+            } else {
+                var chatDate = JSON.parse(res);
+                ulflistVue.chatList.push(chatDate);
+                scrollToEndd();
+                // saveMsgSql(chatDate);
+            }
+        } else {
+            console.log('websocket启动成功')
+        }
+    }, function (etype, msg) {
+        console.log(etype, msg)
+    });
+
+
+    $("#msgVal").bind("input",function () {
+        reloadInpStatus();
+    });
+
+    function reloadInpStatus(){
+        var val_inp = $("#msgVal").val();
+        console.log(val_inp)
+        if (val_inp.trim() === "") {
+            flag = false;
+            //空的时候 : url("../img/biaoqing3.png");
+            $("#sendBtn").css("background",'url("./img/biaoqing3.png")');
+        }else{
+            flag = true;
+            //不空的时候
+            $("#sendBtn").css("background",'url("./img/success3.png")');
+        }
+    }
+
+    /**
+     * 监听点击事件
+     */
+    $("#sendBtn").bind("click",function () {
+
+        var val_inp = $("#msgVal").val();
+        if (val_inp.trim() === "") {
+            alert("请在此输入您的消息")
+            return
+        }
+
+        var msgdate = {
+            "fromUserId": fid,
+            "toUserId": toid,
+            "contentText": val_inp,
+            "cmd": "11",
+            "chatType": "1",
+            "msgType": "0"
+        };
+
+        sendMessage(msgdate);
+        console.log(ulflistVue)
+        ulflistVue.chatList.push(msgdate)
+        $("#msgVal").val("");
+        reloadInpStatus();
+        scrollToEndd();
+        savemsg(msgdate);
+    });
+
+    // function scrollToEndd() {//滚动到底部
+    //     const h = 80 * ulflistVue.chatList.length + 1000;
+    //     $('ul.ulflist').animate({
+    //         scrollTop: h
+    //     })
+    // }
+
+    function savemsg(msgdate) {
+        console.log("sql:" + INSERT_USER_SQL)
+        insertDataChat(INSERT_USER_SQL, msgdate, function (res) {
+            console.log("保存数据成功", res)
+        }, function (e) {
+            console.log("保存数据失败", e)
+        });
+    }
+
+</script>
+</body>
+</html>

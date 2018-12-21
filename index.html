@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <title>好友列表</title>
+    <link href="./css/index.css" rel="stylesheet">
+    <script src="./js/vue.js" type="application/javascript"></script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/common.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+<header>
+    <img class="back" src="./img/nav_back_black.png">
+    <div class="msg">好友</div>
+    <div class="rightIcon">
+        <img class="ricon contentd"  style="display: none" src="./img/paixu3.png">
+        <img class="ricon addicon"  style="display: none"  src="./img/add3.png">
+    </div>
+</header>
+<section>
+    <div class="tabAll">
+        <div class="tab tcolor" lang="0">
+            好友
+        </div>
+        <div class="tab " style="display:none;" lang="1">
+            赚粉
+        </div>
+        <div class="tab " lang="2">
+            群组
+        </div>
+    </div>
+
+    <div class="seachAll">
+        <input class="seach" type="text" placeholder="搜索"/>
+    </div>
+    <div class="flist">
+        <ul class="ulflist">
+
+            <li v-for="item in flist" @click="goitem(item)">
+
+                <!--好友-->
+                <template v-if="type == 0">
+                    <img class="touxiang" :src="imgpath+item.friendUserHeadUrl">
+                    <div class="name" v-if="item.nickName != '' " v-text="item.nickName"></div>
+                    <div class="name" v-else v-text="'未设置昵称'"></div>
+                    <div class="time" style="display: none">10分钟前</div>
+                </template>
+                <!--赚粉-->
+                <template v-else-if="type == 1">
+
+                </template>
+
+                <!--群组-->
+                <template v-else-if="type == 2">
+                    <img class="touxiang" :src="imgpath+item.groupHeadUrl">
+                    <div class="name" v-text="item.groupName"></div>
+                    <div class="time" style="display: none">10分钟前</div>
+                </template>
+
+            </li>
+
+            <!--<li>-->
+            <!--<img class="touxiang" src="./img/biaoqing3.png">-->
+            <!--<div class="name">黄大仙</div>-->
+            <!--<div class="time">10分钟前</div>-->
+            <!--</li>-->
+
+
+        </ul>
+    </div>
+</section>
+<script>
+    var flistVue = new Vue({
+        el: ".flist",
+        data: {
+            flist: [],
+            imgpath: imgurl,
+            type: 0
+        },
+        methods: {
+            goitem(item) {
+                var ts = this;
+                if (ts.type == 0) {
+                    localStorage.setItem("chatEmoji", JSON.stringify(item))
+                    window.location.href = "chatEmoji.html";
+                } else if (ts.type == 1) {
+
+                } else if (ts.type == 2) {
+                    // var data = {
+                    //     "groupChatId": item.groupChatId,
+                    //     "groupName": item.groupName
+                    // };
+
+                   var data = {
+                        "groupChatId": item.groupChatId,
+                        "groupName": item.groupName,
+                        "groupHeadUrl": item.groupHeadUrl
+                    };
+                    localStorage.setItem("chatGroupEmoji", JSON.stringify(data))
+                    window.location.href = "chatGroupEmoji.html";
+                }
+            }
+        }
+    });
+
+    /**
+     * 获取审核通过的好友
+     */
+    if (!isDeBug) {
+        setContactFun("PASS");
+    }
+
+    $(".seach").click("click", function () {
+        localStorage.setItem("stype",1);
+        window.location.href = "sousuo.html";
+    });
+
+    $(".back").bind("click", function () {
+        backHis();
+    });
+
+    $(".addicon").bind("click", function () {
+        window.location.href = "addFriend.html";
+    });
+
+    $(".tab").bind("click", function () {
+        $(".tab").removeClass("tcolor");
+        $(this).addClass("tcolor");
+        var lang = $(this).attr("lang");
+        flistVue.type = lang;
+        if (lang == 0) {
+            if (!isDeBug) {
+                setContactFun("PASS");
+            }
+        } else if (lang == 1) {
+
+        } else if (lang == 2) {
+            if (!isDeBug) {
+                setQunFun("PASS");
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

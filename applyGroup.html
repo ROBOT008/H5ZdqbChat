@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <title>申请加入群</title>
+    <link href="./css/applyGroup.css" rel="stylesheet">
+    <script src="./js/jquery-3.3.1.min.js" type="application/javascript"></script>
+    <script src="./js/vue.js" type="application/javascript"></script>
+    <script src="./js/common.js" type="application/javascript"></script>
+
+    <style>
+        .touxiang {
+            margin-top: 10px;
+            width: 200px;
+            height: 200px;
+        }
+
+        .name {
+            color: #2a2e32;
+            font-size: 1.8em;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .info {
+            color: #2a2e32;
+            height: 30px;
+            font-size: 1em;
+        }
+
+        .infos {
+            color: #cdd2d8;
+            height: auto;
+            font-size: 0.8em;
+        }
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+
+        .btnn {
+            margin: 10px 0;
+            outline: none;
+        }
+
+        .sendmsg {
+            color: #fff;
+            background: #ff390b;
+            height: 50px;
+            border: 0;
+            border-radius: 25px;
+            line-height: 50px;
+            width: 80%;
+            text-align: center;
+            font-size: 1.3em;
+        }
+
+        .addFriend {
+            color: #fff;
+            background: #2487ff;
+            height: 50px;
+            border: 0;
+            border-radius: 25px;
+            line-height: 50px;
+            width: 80%;
+            text-align: center;
+            font-size: 1.3em;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <img class="back" src="./img/nav_back_black.png">
+    <div class="msg">群资料</div>
+</header>
+<section>
+    <div class="flist">
+        <img :src="imgpath + groupData.groupHeadUrl" class="touxiang">
+        <div class="name" v-text="groupData.groupName"></div>
+        <div class="info" v-text="'群号:'+groupData.groupChatId"></div>
+        <div class="infos" v-text="groupData.groupNotice"></div>
+        <div class="seachAll" v-if="groupData.addStatus == 'CHECK'">
+            <input class="seach" type="text" v-model="verifyMsg" placeholder="请输入您的验证消息"/>
+        </div>
+        <div class="btn">
+            <button class="btnn sendmsg" type="button" @click="applyGroupFun" v-if="groupData.addStatus == 'CHECK'">
+                申请加入
+            </button>
+            <button class="btnn sendmsg" type="button" @click="sendMsgFun" v-if="groupData.addStatus == 'PASS'">发送消息
+            </button>
+            <button class="btnn addFriend" type="button" @click="addFriendFun" v-if="groupAdmin.userId == userId">
+                邀请成员
+            </button>
+            <button class="btnn addFriend" type="button" @click="lookGroupMemberFun">
+                群成员
+            </button>
+        </div>
+    </div>
+</section>
+<script>
+    var group = localStorage.getItem("group");
+    var groupJson =  JSON.parse(group);
+    var userid = localStorage.getItem("userid");
+    var flistVue = new Vue({
+        el: '.flist',
+        data: {
+            userId: userid,
+            groupData:groupJson,
+            verifyMsg: '',
+            imgpath: imgurl,
+            groupAdmin: ''
+        },
+        created(){
+            setGroupUserAdmin(groupJson.groupChatId);
+        },
+        methods: {
+            applyGroupFun() {
+                var ts = this;
+                applyGroupFun(ts.groupData.groupChatId, ts.verifyMsg);
+            },
+            addFriendFun() {
+                var ts = this;
+                localStorage.setItem("groupChatId", ts.groupData.groupChatId);
+                window.location.href = "invite.html";
+            },
+            sendMsgFun() {
+                localStorage.removeItem("group")
+                backHis();
+            },
+            lookGroupMemberFun(){
+                var ts = this;
+                localStorage.setItem("groupChatId",ts.groupData.groupChatId);
+                window.location.href = "groupMember.html";
+            }
+        }
+    });
+
+    $(".back").bind("click", function () {
+        flistVue.sendMsgFun();
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <title>聊天界面</title>
+    <link href="../css/chat-emoji.css" rel="stylesheet">
+    <link href="../emoji/webiaoqing.css" rel="stylesheet" type="text/css">
+
+    <script src="../js/jquery-3.3.1.min.js" type="application/javascript"></script>
+    <script src="../js/vue.js" type="application/javascript"></script>
+    <script src="../js/stomp.min.js" type="application/javascript"></script>
+    <script src="../js/sockjs.min.js" type="application/javascript"></script>
+    <script src="../js/sockjsCommon.js" type="application/javascript"></script>
+
+    <!--表情-->
+    <script src="../emoji/webiaoqin.js" type="application/javascript"></script>
+    <style>
+        #form_article {
+            position: relative;
+            background: #fff;
+            width: 83%;
+            outline: none;
+            border-radius: 25px;
+            line-height: 20px;
+            padding: 10px 5px 10px 10px;
+        }
+        .wf{
+           width: 66% !important;
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <img class="back" src="../img/nav_back_black.png">
+    <div class="msg">与<span id="msgid"></span>对话</div>
+</header>
+<section>
+    <ul class="ulflist">
+        <template v-for="item in chatList">
+            <li v-if="item.toId == toid">
+                <img class="rtouxiang" src="../img/123.png">
+                <div class="rcmsg" v-html="item.contentText"></div>
+            </li>
+            <li v-else>
+                <img class="touxiang" src="../img/1.jpg">
+                <div class="cmsg" v-html="item.contentText"></div>
+            </li>
+        </template>
+    </ul>
+
+</section>
+<footer class="footer">
+    <!--<div class="seachAll">-->
+    <!--<input class="seach" type="text" id="msgVal" placeholder="请在此输入您的消息"/>-->
+    <!--<button class="expression" type="button" id="sendBtn"></button>-->
+    <!--</div>-->
+
+    <div class="seachAll">
+        <!--<input class="seach" type="text" id="msgVal" placeholder="请在此输入您的消息"/>-->
+        <article
+                id="form_article" contenteditable="true" onkeydown="myInput.listen(this, event);"></article>
+        <button class="expressionemoji el" type="button" id="sendBtnd"></button>
+        <button class="expression" type="button" id="sendBtn"></button>
+    </div>
+    <div id="emoji_div">
+        <div class="page_emotion box_swipe" id="page_emotion">
+            <dl id="list_emotion" class="list_emotion pt_10"></dl><!-- 表情框 -->
+            <dt>
+                <ol id="nav_emotion" class="nav_emotion"></ol>
+            </dt><!-- 分页提示点 -->
+        </div>
+    </div>
+</footer>
+
+<script>
+    // let t_name = "chat_test_msg";
+    // const INSERT_USER_SQL = "insert into " + t_name + " (fromId, toId,content) values(?,?,?)";
+
+    var flag = false;
+    var fid = "222";
+    var toUserId = "111";
+    var ulflistVue = new Vue({
+        el: '.ulflist',
+        data: {
+            chatList: [],
+            toid: toUserId
+        },
+        method: {
+            saveChatMsg(msgdate) {
+                ulflistVue.chatList.push(msgdate)
+            }
+        }
+    });
+    $("#msgid").html(toUserId);
+    var h = window.screen.height - 62 - 50;
+    $(".ulflist").css("max-height", h + "px");
+
+
+    $("#form_article").bind("input", function () {
+        reloadInpStatus();
+    });
+
+    function reloadInpStatus() {
+        var val_inp = $("#form_article").html();
+        if (val_inp.trim() === "") {
+            flag = false;
+            $("#sendBtn").css("display", 'none');
+            $("#sendBtnd").addClass('el')
+            $("#form_article").removeClass('wf')
+        } else {
+            //不空的时候
+            flag = true;
+            $("#sendBtn").css("display", 'block');
+            $("#sendBtnd").removeClass('el')
+            $("#form_article").addClass('wf');
+        }
+    }
+
+    $("#sendBtnd").bind("click", function () {
+        $("#emoji_div").toggle()
+    });
+
+    setTimeout(function () {
+        $("#emoji_div").toggle()
+    }, 100)
+
+    $("#sendBtn").bind("click", function () {
+        var val_inp = $("#form_article").html();
+        if (val_inp.trim() === "") {
+            alert("请在此输入您的消息")
+            return
+        }
+        var msgdate = {
+            "fromId": fid,
+            "toId": toUserId,
+            "contentText": val_inp,
+            "cmd": '0',
+            "chatType": '1',
+            "msgType": '0',
+            "userHeadUrl":'',
+            "userName":''
+        }
+        ulflistVue.chatList.push(msgdate)
+        sendMsg(msgdate);
+        $("#form_article").html("");
+        scrollToEnd();
+        reloadInpStatus();
+    });
+
+    function getMsg(res) {
+        // console.log('聊天界面', res);
+        ulflistVue.chatList.push(res)
+        scrollToEnd();
+    }
+</script>
+</body>
+</html>

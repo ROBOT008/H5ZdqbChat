@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>聊天界面</title>
+    <link href="../../css/chat.css" rel="stylesheet">
+    <script src="../../js/jquery-3.3.1.min.js"></script>
+    <style>
+
+    </style>
+</head>
+<body>
+<header>
+    <img class="back" src="../../img/nav_back_black.png">
+    <div class="msg">与
+        <spam id="msgid"></spam>
+        对话
+    </div>
+</header>
+<section>
+    <ul class="ulflist">
+        <template v-for="item in chatList">
+            <li v-if="item.toUserId == toid">
+                <img class="rtouxiang" src="../../img/biaoqing3.png">
+                <div class="rcmsg" v-text="item.contentText"></div>
+            </li>
+            <li v-else>
+                <img class="touxiang" src="../../img/biaoqing3.png">
+                <div class="cmsg" v-text="item.contentText"></div>
+            </li>
+        </template>
+
+
+        <!--<li>-->
+        <!--<img class="touxiang" src="img/biaoqing3.png">-->
+        <!--<div class="cmsg">嗯嗯</div>-->
+        <!--</li>-->
+
+        <!--<li>-->
+        <!--<img class="rtouxiang" src="img/biaoqing3.png">-->
+        <!--<div class="rcmsg">算了</div>-->
+        <!--</li>-->
+
+    </ul>
+
+</section>
+<footer class="footer">
+    <div class="seachAll">
+        <input class="seach" type="text" id="msgVal" placeholder="请在此输入您的消息"/>
+        <button class="expression" type="button" onclick="send()"></button>
+    </div>
+</footer>
+<script src="../../js/vue.js"></script>
+<script src="../../js/socket.js"></script>
+<script src="../H5Sql.js"></script>
+<script src="../chatH5Sql.js"></script>
+<script>
+    var toid = "10086";
+    var fid = "007";
+    var ulflistVue = new Vue({
+        el: '.ulflist',
+        data: {
+            chatList: [],
+            toid: toid,
+            fid: fid
+        },
+        method: {}
+    });
+    $("#msgid").html(toid);
+    var h = window.screen.height - 62 - 50;
+    $(".ulflist").css("max-height", h + "px");
+    openSocket(fid, function (type, res) {
+        if (type == 'onmessage') {
+            // console.log('接收到消息', res)
+            if (res == '"连接成功"') {
+                console.log("====>连接成功")
+            } else {
+                var chatDate = JSON.parse(res);
+                ulflistVue.chatList.push(chatDate);
+                saveMsgSql(chatDate);
+            }
+        } else {
+            console.log('websocket启动成功')
+        }
+    }, function (etype, msg) {
+        console.log(etype, msg)
+    });
+
+    function send() {
+        var val_inp = $("#msgVal").val();
+        if (val_inp.trim() === "") {
+            alert("请在此输入您的消息")
+            return
+        }
+        var msgdate = {
+            "fromUserId": fid,
+            "toUserId": toid,
+            "contentText": val_inp
+        };
+        sendMessage(msgdate);
+        ulflistVue.chatList.push(msgdate);
+        saveMsgSql(msgdate);
+        $("#msgVal").val("");
+    }
+
+
+</script>
+</body>
+</html>

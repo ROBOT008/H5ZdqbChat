@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>添加好友</title>
+    <link href="../css/addFriend.css" rel="stylesheet">
+    <script src="../js/jquery-3.3.1.min.js" ></script>
+    <style>
+
+    </style>
+</head>
+<body>
+<header>
+    <img class="back" src="../img/nav_back_black.png">
+    <div class="msg">好友(300)</div>
+    <div class="rightIcon">
+        <img class="ricon" src="../img/paixu3.png">
+        <img class="ricon" src="../img/add3.png">
+    </div>
+</header>
+<section>
+    <div class="tabAll">
+        <div class="tab tcolor">
+            找人
+        </div>
+        <div class="tab ">
+            找群
+        </div>
+    </div>
+
+    <div class="seachAll">
+        <input class="seach" type="text" placeholder="搜索电话号码 / 群号码"/>
+    </div>
+    <div class="titleAll">
+        <div class="qunall">群推荐</div>
+    </div>
+    <div class="flist">
+        <ul class="ulflist">
+            <li>
+                <div class="tinfo">
+                    <img class="touxiang" src="../img/123.png">
+                </div>
+                <div class="info">
+                    <div class="name">赚贝通讨论群</div>
+                    <div class="qmsg">探讨赚贝通价值探讨赚贝通价值探讨赚贝通价值探讨赚贝通价值 共同致富算是...</div>
+                </div>
+                <div class="finfo">
+                    <div class="memberd">成员300人</div>
+                    <img class="addBtn"  src="../img/addBtn3.png"/>
+                </div>
+            </li>
+
+
+            <li>
+                <div class="tinfo">
+                    <img class="touxiang" src="../img/123.png">
+                </div>
+                <div class="info">
+                    <div class="name">赚贝通讨论群</div>
+                    <div class="qmsg">探讨赚贝通价值探讨赚贝通价值探讨赚贝通价值探讨赚贝通价值 共同致富算是...</div>
+                </div>
+                <div class="finfo">
+                    <div class="memberd">成员300人</div>
+                    <img class="addBtn"  src="../img/addBtn3.png"/>
+                </div>
+            </li>
+
+
+            <li>
+                <div class="tinfo">
+                    <img class="touxiang" src="../img/123.png">
+                </div>
+                <div class="info">
+                    <div class="name">赚贝通讨论群</div>
+                    <div class="qmsg">探讨赚贝通价值探讨赚贝通价值探讨赚贝通价值探讨赚贝通价值 共同致富算是...</div>
+                </div>
+                <div class="finfo">
+                    <div class="memberd">成员300人</div>
+                </div>
+            </li>
+
+
+
+
+
+
+
+
+        </ul>
+    </div>
+
+</section>
+<script>
+    $(".back").bind("click", function () {
+        backHis();
+    });
+    $(".tab").bind("click", function () {
+        $(".tab").removeClass("tcolor");
+        $(this).addClass("tcolor")
+    });
+
+</script>
+</body>
+</html>

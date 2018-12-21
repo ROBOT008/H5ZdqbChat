@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <title>添加好友</title>
+    <link href="./css/addFriend.css" rel="stylesheet">
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/vue.js" type="application/javascript"></script>
+    <script src="./js/common.js" type="application/javascript"></script>
+    <style>
+        .qtitle {
+            display: none;
+            float: right;
+            /*text-align: center;*/
+            width: 20%;
+            padding-top: 10px;
+            font-size: 1em;
+            margin-right: 10px;
+        }
+        input::-webkit-input-placeholder {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img class="back" src="./img/nav_back_black.png">
+    <div class="msg">添加</div>
+
+</header>
+<section>
+    <div class="tabAll">
+        <div class="tab tcolor" lang="0">
+            找人
+        </div>
+        <div class="tab " lang="1">
+            找群
+        </div>
+        <div class="qtitle addqun">创建群组</div>
+    </div>
+
+    <div class="seachAll">
+        <input class="seach" readonly type="text" placeholder="搜索电话号码 / 群号码"/>
+    </div>
+    <!--<div class="">-->
+        <!--<div class="qtitle addqun">创建群组</div>-->
+        <!--<div class="qtitle addzu">创建多人会话</div>-->
+    <!--</div>-->
+    <div class="titleAll">
+        <div class="qunall" id="quntitle">好友申请</div>
+    </div>
+    <div class="flist">
+        <ul class="ulflist">
+            <li v-for="item in flist" @click="goitem(item)">
+                <template v-if="type == 0">
+                    <div class="tinfo">
+                        <img class="touxiang" :src="imgpath + item.friendUserHeadUrl">
+                    </div>
+                    <div class="info">
+                        <div class="name" v-text="item.nickName"></div>
+                        <div class="qmsg" v-text="item.verifyMsg"></div>
+                    </div>
+                    <div class="finfo">
+                        <div class="memberdd" v-if="1 == item.launch">
+                            <template v-if="item.addStatus == 'CHECK'">等待对方审核</template>
+                            <template v-else-if="item.addStatus == 'PASS'">已通过</template>
+                        </div>
+
+                        <div class="memberdd" v-else>
+                            <template v-if="item.addStatus == 'CHECK'">查看</template>
+                            <template v-else-if="item.addStatus == 'PASS'">已通过</template>
+                        </div>
+                    </div>
+                </template>
+                <template v-else-if="type == 1">
+                    <template v-if="item.addStatus != 'DOWN'">
+                        <div class="tinfo">
+                            <img class="touxiang" v-if="item.userId != userId" :src="imgpath + item.userHeadUrl">
+                            <img class="touxiang" v-else :src="imgpath + item.groupHeadUrl">
+                        </div>
+                        <div class="info">
+                            <template>
+                                <div class="name" v-if="item.userId != userId" v-text="item.nickName"></div>
+                                <div class="name" v-else v-text="item.groupName"></div>
+                            </template>
+                            <template>
+                                <div class="qmsg" v-if="item.userId != userId" v-text="item.verifyMsg"></div>
+                                <div class="qmsg" v-else v-text="item.groupNotice"></div>
+                            </template>
+                        </div>
+                        <div class="finfo">
+                            <div class="memberdd" v-if="item.userId != userId">
+                                <template v-if="item.addStatus == 'CHECK'">审核</template>
+                                <template v-else-if="item.addStatus == 'PASS'">已通过</template>
+                            </div>
+                            <div class="memberdd" v-else>
+                                <template v-if="item.addStatus == 'CHECK'">等待群主审核</template>
+                                <template v-else-if="item.addStatus == 'PASS'">已通过</template>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-if="item.addStatus == 'DOWN'">
+                        <div class="tinfo">
+                            <img class="touxiang" v-if="item.userId != userId" :src="imgpath + item.userHeadUrl">
+                            <img class="touxiang" v-else :src="imgpath + item.groupHeadUrl">
+                        </div>
+                        <div class="info">
+                            <template>
+                                <div class="name" v-if="item.userId != userId" v-text="item.nickName"></div>
+                                <div class="name" v-else v-text="item.groupName"></div>
+                            </template>
+                            <template>
+                                <div class="qmsg" v-if="item.userId != userId" v-text="item.verifyMsg"></div>
+                                <div class="qmsg" v-else v-text="item.groupNotice"></div>
+                            </template>
+                        </div>
+                        <div class="finfo">
+                            <div class="memberdd">
+                                <template>群主拒绝,重新申请</template>
+                            </div>
+                        </div>
+                    </template>
+
+
+                </template>
+            </li>
+
+        </ul>
+    </div>
+
+
+    <!--<div class="titleAll" >-->
+    <!--<div class="qunall">群推荐</div>-->
+    <!--</div>-->
+    <!--<div class="flist">-->
+    <!--<ul class="ulflist">-->
+    <!--<li>-->
+    <!--<div class="tinfo">-->
+    <!--<img class="touxiang" src="./img/123.png">-->
+    <!--</div>-->
+    <!--<div class="info">-->
+    <!--<div class="name">赚贝通讨论群</div>-->
+    <!--<div class="qmsg">探讨赚贝通价值探讨赚贝通价值探讨赚贝通价值探讨赚贝通价值 共同致富算是...</div>-->
+    <!--</div>-->
+    <!--<div class="finfo">-->
+    <!--<div class="memberd">成员300人</div>-->
+    <!--<img class="addBtn"  src="./img/addBtn3.png"/>-->
+    <!--</div>-->
+    <!--</li>-->
+
+</section>
+<script>
+    var flistVue = new Vue({
+        el: ".flist",
+        data: {
+            flist: [],
+            imgpath: imgurl,
+            userId: localStorage.getItem("userid"),
+            type: 0
+        },
+        methods: {
+            goitem(item) {
+                var ts = this;
+                if (ts.type == 0) {
+                    localStorage.setItem("applyFriendBack", JSON.stringify(item));
+                    window.location.href = "applyFriendBack.html";
+                } else if (ts.type == 1) {
+                    var data = {
+                        "userId": item.userId,
+                        "groupChatId": item.groupChatId,
+                        "nickName": item.nickName,
+                        "groupName": item.groupName,
+                        "groupHeadUrl": item.groupHeadUrl,
+                        "groupNotice": item.groupNotice,
+                        "verifyMsg": item.verifyMsg,
+                        "userHeadUrl": item.userHeadUrl,
+                        "addStatus": item.addStatus
+                    };
+                    localStorage.setItem("verifyGroupBack", JSON.stringify(data));
+                    window.location.href = "applyGroupBack.html";
+                }
+            }
+        }
+    });
+
+    /**
+     * 获取未审核的好友
+     */
+    if (!isDeBug) {
+        setContactFun("CHECK");
+    }
+
+    // var f = {
+    //     "userId": 98768286,
+    //     "groupChatId": "861895137",
+    //     "unread": 0,
+    //     "nickName": "18277993525",
+    //     "groupName": "跑车VIP群",
+    //     "groupHeadUrl": "group1/M00/00/D8/rBLB3lwbHBqAJryjAAFmTW5uT8c258.jpg",
+    //     "groupNotice": "各种各样跑车",
+    //     "userGrade": "1",
+    //     "verifyMsg": "加群",
+    //     "userHeadUrl": "group1/M00/00/D6/rBLB3lwaJlGACSCfAACfcht4MpE212.png",
+    //     "addStatus": "DOWN"
+    // }
+
+    // flistVue.flist.push(f);
+
+
+    $(".seach").click("click", function () {
+        localStorage.setItem("stype", 0);
+        window.location.href = "sousuo.html";
+    });
+
+    /**
+     * 创建群组
+     */
+    $(".addqun").click("click", function () {
+        console.log('创建群组');
+        createQun();
+    });
+
+    /**
+     * 创建多人对话
+     */
+    $(".addzu").click("click", function () {
+        console.log('创建多人对话');
+        window.location.href = "invite.html";
+    });
+
+
+    $(".back").bind("click", function () {
+        backHis();
+    });
+
+    $(".seach").bind("click", function () {
+        window.location.href = "sousuo.html";
+    });
+
+    $(".tab").bind("click", function () {
+        $(".tab").removeClass("tcolor");
+        $(this).addClass("tcolor");
+        var lang = $(this).attr("lang");
+        flistVue.type = lang;
+        if (lang == 0) {
+            $("#quntitle").html('好友申请');
+            $(".qtitle").css("display", "none");
+            if (!isDeBug) {
+                setContactFun("CHECK");
+            }
+        } else {
+            $("#quntitle").html('群邀请');
+            $(".qtitle").css("display", "block");
+            if (!isDeBug) {
+                setQunFun("CHECK");
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

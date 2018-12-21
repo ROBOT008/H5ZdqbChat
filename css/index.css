@@ -1,0 +1,131 @@
+html, body {
+    padding: 0px;
+    margin: 0px;
+}
+
+header, section {
+    clear: both;
+}
+
+.back {
+    margin-left: 5px;
+    margin-top: 5px;
+    height: 25px;
+    width: 15px;
+    float: left;
+    padding: 5px;
+}
+
+.msg {
+    float: left;
+    margin-top: 5px;
+    height: 30px;
+    line-height: 30px;
+    padding: 5px;
+}
+
+.rightIcon {
+    float: right;
+}
+
+.ricon {
+    height: 30px;
+    width: 30px;
+    padding: 5px;
+}
+
+.tabAll {
+    margin-left: 13px;
+    margin-right: 13px;
+}
+
+.tab {
+    color: #000;
+    float: left;
+    font-size: 1.2em;
+    height: 40px;
+    width: 50px;
+    line-height: 40px;
+    margin-left: 10px;
+}
+
+.tcolor {
+    color: #ff4537;
+    font-size: 1.5em;
+    width: 50px;
+    margin-right: 5px;
+    border-bottom: 4px solid #ffae08;
+    line-height: 30px;
+}
+
+.seachAll {
+    margin-left: 13px;
+    margin-right: 13px;
+}
+
+
+input.seach {
+    outline: none;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 89%;
+    height: 50px;
+    background: #f3f5f8;
+    border-radius: 25px;
+    border: 0;
+
+    background-image: url(../img/seach3.png); /*设置小图标*/
+    background-size: 25px 25px; /*小图标的大小*/
+    background-position:10px 15px; /*小图标在input的位置*/
+    background-repeat: no-repeat; /*背景小图标不重复*/
+    padding: 2px 0px 2px 40px;
+}
+input::-webkit-input-placeholder {
+    padding: 0px 0px 0px 40px; /*设置input内边距*/
+    font-size: 13px;
+}
+
+
+.flist {
+    margin-top: 20px;
+    margin-left: 13px;
+    margin-right: 13px;
+}
+
+.ulflist {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.ulflist li {
+    height: 70px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.touxiang {
+    width: 60px;
+    height: 60px;
+    float: left;
+    border-radius: 50px;
+}
+
+.name {
+    float: left;
+    color: #000;
+    font-size: 17px;
+    margin-top: 15px;
+    padding-left: 10px;
+}
+
+.time {
+    float: right;
+    margin-top: 15px;
+    padding-left: 10px;
+    color: #9aa5b2;
+}
+
+.addicon{
+    margin-right: 11px;
+}

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <title>群邀请</title>
+    <link href="./css/verifyGroupBack.css" rel="stylesheet">
+    <script src="./js/jquery-3.3.1.min.js" type="application/javascript"></script>
+    <script src="./js/vue.js" type="application/javascript"></script>
+    <script src="./js/common.js" type="application/javascript"></script>
+    <!--<script src="./js/stomp.min.js" type="application/javascript"></script>-->
+    <!--<script src="./js/sockjs.min.js" type="application/javascript"></script>-->
+    <!--<script src="js/sockjsCommon.js" type="application/javascript"></script>-->
+    <style>
+        .infos {
+            color: #cdd2d8;
+            height: auto;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img class="back" src="./img/nav_back_black.png">
+    <div class="msg"></div>
+</header>
+<section>
+    <div class="flist">
+        <img class="touxiang" :src="imgpath + verifyGroup.userHeadUrl">
+        <div class="info" v-text="'群名称:'+verifyGroup.groupName"></div>
+        <div class="infos" v-text="'群  号:'+verifyGroup.groupChatId"></div>
+        <div class="infos" v-text="'申请人:'+verifyGroup.nickName"></div>
+        <div class="infos" v-text="verifyGroup.groupNotice"></div>
+        <!--        <div class="info">加入赚道:888天</div>-->
+        <div class="seachAll" v-if="userid != verifyGroup.userId">
+            <input class="seach" type="text" v-model="verifyGroup.verifyMsg" readonly/>
+        </div>
+        <div class="btn">
+            <template v-if="userid == verifyGroup.userId">
+                <template v-if="verifyGroup.addStatus == 'CHECK'">
+                    <button class="btnn sendmsg waitmsg" type="button">等待对方审核中</button>
+                </template>
+                <template v-if="verifyGroup.addStatus == 'PASS'">
+                    <button class="btnn sendmsg" type="button">已通过</button>
+                </template>
+                <template v-if="verifyGroup.addStatus == 'DOWN'">
+                    <button class="btnn sendmsg" type="button" @click="reloadApplyPassFun()">重新验证</button>
+                </template>
+            </template>
+            <template v-else>
+                <template v-if="verifyGroup.addStatus == 'CHECK'">
+                    <button class="btnn sendmsg" type="button" @click="applyPassFun()">审核通过</button>
+                    <button class="btnn sendback" type="button" @click="applyFailFun()">审核不通过</button>
+                </template>
+                <template v-else>
+                    <button class="btnn sendmsg" type="button">已通过</button>
+                </template>
+            </template>
+        </div>
+    </div>
+</section>
+<script>
+
+    var verifyGroup = localStorage.getItem("verifyGroupBack");
+    var userid = localStorage.getItem("userid");
+    console.log(verifyGroup);
+    var verifyGroupVue = new Vue({
+        el: ".flist",
+        data: {
+            verifyGroup: JSON.parse(verifyGroup),
+            imgpath: imgurl,
+            userid: userid
+        },
+        methods: {
+            reloadApplyPassFun() {
+                var ts = this;
+                var data = {
+                    "deleted": 1,
+                    "groupChatId": ts.verifyGroup.groupChatId,
+                    "nickName": ts.verifyGroup.nickName,
+                    "addStatus": "CHECK",
+                    "updateUserId": ts.verifyGroup.userId
+                };
+                console.log("重新发起申请"+JSON.stringify(data))
+                verifyGroupFun(data);
+            },
+            applyPassFun() {
+                var ts = this;
+                var data = {
+                    "deleted": 1,
+                    "groupChatId": ts.verifyGroup.groupChatId,
+                    "nickName": ts.verifyGroup.nickName,
+                    "addStatus": "PASS",
+                    "updateUserId": ts.verifyGroup.userId
+                };
+                verifyGroupFun(data);
+            },
+            applyFailFun() {
+                var ts = this;
+                var data = {
+                    "deleted": 2,
+                    "groupChatId": ts.verifyGroup.groupChatId,
+                    "nickName": ts.verifyGroup.nickname,
+                    "addStatus": "DOWN",
+                    "updateUserId": ts.verifyGroup.userId
+                };
+                verifyGroupFun(data);
+            }
+        }
+    });
+
+    $(".back").bind("click", function () {
+        localStorage.removeItem("verifyGroupBack");
+        backHis();
+    });
+</script>
+</body>
+</html>

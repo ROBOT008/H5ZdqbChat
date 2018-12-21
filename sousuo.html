@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <link href="./css/sousuo.css" rel="stylesheet">
+    <script src="./js/jquery-3.3.1.min.js" type="application/javascript"></script>
+    <script src="./js/vue.js" type="application/javascript"></script>
+    <script src="./js/common.js" type="application/javascript"></script>
+
+</head>
+<body>
+<header class="header">
+    <img class="back" src="./img/nav_back_black.png">
+</header>
+<style>
+    input::-webkit-input-placeholder {
+        font-size: 14px;
+    }
+</style>
+<section>
+
+    <div class="seachAll">
+        <input class="seach" id="sousuo" type="text" placeholder="搜索电话号码 / 群号码"/>
+        <div class="sousuoBtn">取消</div>
+    </div>
+
+    <div class="icons">
+        <ul class="ulicon">
+
+            <li v-for="(item,index) in iconsArr">
+                <img v-if="item.click" :src="item.iconClick" @click="clickBtned(index,item)">
+                <img v-else :src="item.icon" @click="clickBtn(index,item)">
+                <div v-text="item.name"></div>
+            </li>
+
+            <!--<li >-->
+            <!--<img src="img/contact3-d.png">-->
+            <!--<div>联系人</div>-->
+            <!--</li>-->
+            <!--<li >-->
+            <!--<img src="img/chat-record-d.png">-->
+            <!--<div>聊天记录</div>-->
+            <!--</li>-->
+            <!--<li >-->
+            <!--<img src="img/group-d.png">-->
+            <!--<div>附近群组</div>-->
+            <!--</li>-->
+        </ul>
+    </div>
+    <!--<li>-->
+    <!--<div class="tinfo">-->
+    <!--<img class="touxiang" src="./img/123.png">-->
+    <!--</div>-->
+    <!--<div class="info">-->
+    <!--<div class="name">张三</div>-->
+    <!--<div class="qmsg">赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包</div>-->
+    <!--</div>-->
+    <!--</li>-->
+    <!--<li>-->
+    <!--<div class="tinfo">-->
+    <!--<img class="touxiang" src="./img/1.jpg">-->
+    <!--</div>-->
+    <!--<div class="info">-->
+    <!--<div class="name">李四</div>-->
+    <!--<div class="qmsg">赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包赚道钱包新版升级附送大礼包</div>-->
+    <!--</div>-->
+    <!--</li>-->
+
+    <div class="sousuoRes">
+        <!--<template v-if="users.length > 0">-->
+            <template>
+            <div class="title">联系人</div>
+            <ul>
+                <li v-if="users.length == 0" class="nof">
+                    查无此好友
+                </li>
+                <li v-else v-for="item in users" @click="goItem(item)">
+                    <div class="tinfo">
+                        <img class="touxiang" :src="imgpath + item.data.userHeadUrl">
+                    </div>
+                    <div class="info">
+                        <div class="name" v-text="item.data.userName"></div>
+                        <div class="qmsg" v-if="item.userSign != '' " v-text="item.data.userSign"></div>
+                        <div class="qmsg" v-else v-text="'这家伙很懒,什么都没留下'"></div>
+                    </div>
+                </li>
+            </ul>
+        </template>
+        <!--<template v-if="groups.length > 0">-->
+            <template>
+            <div class="title">群聊</div>
+            <ul>
+                <li v-if="groups.length == 0" class="nof">
+                    查无此群聊
+                </li>
+                <li v-else v-for="item in groups" @click="goQunItem(item)">
+                    <div class="tinfo">
+                        <img class="touxiang" :src="imgpath + item.data.groupHeadUrl">
+                    </div>
+                    <div class="info">
+                        <div class="name" v-text="item.data.groupName"></div>
+                        <div class="qmsg" v-text="item.data.groupNotice"></div>
+                    </div>
+                </li>
+            </ul>
+        </template>
+
+        <!--<template v-if="messages.length > 0">-->
+            <template>
+            <div class="title">聊天记录</div>
+            <ul>
+                <li v-if="messages.length == 0" class="nof">
+                    没有找到聊天记录
+                </li>
+                <li v-else v-for="item in messages" @click="goMsgItem(item)">
+                    <div class="tinfo">
+                        <img class="touxiang" :src="imgpath + item.data.friendUserHeadUrl">
+                    </div>
+                    <div class="info">
+                        <div class="name" v-text="item.data.nickName"></div>
+                        <div class="qmsg" v-text="item.msgContent"></div>
+                    </div>
+                </li>
+            </ul>
+        </template>
+    </div>
+
+
+</section>
+<script>
+    var userid = localStorage.getItem("userid");
+    var type = localStorage.getItem("stype");
+    var arr = [];
+    var iconsVue = new Vue({
+        el: ".icons",
+        data: {
+            iconsArr: [{
+                "icon": 'img/contact3-d.png',
+                "iconClick": 'img/contact3-cd.png',
+                "click": false,
+                "name": '联系人',
+                "keyType": 1
+            }, {
+                "icon": 'img/chat-record-d.png',
+                "iconClick": 'img/chat-record-cd.png',
+                "click": false,
+                "name": '聊天记录',
+                "keyType": 2
+            }, {
+                "icon": 'img/group-d.png',
+                "iconClick": 'img/group-cd.png',
+                "click": false,
+                "name": '附近群组',
+                "keyType": 3
+            }]
+        },
+        methods: {
+            clickBtn(i, item) {
+                this.iconsArr[i].click = true
+                arr.push(i);
+            },
+            clickBtned(i, item) {
+                this.iconsArr[i].click = false
+                arr.remove(i);
+            }
+        }
+    });
+
+
+    var friendListVue = new Vue({
+        el: ".sousuoRes",
+        data: {
+            users: [],
+            groups: [],
+            messages: [],
+            imgpath: imgurl
+        },
+        methods: {
+            goItem(item) {
+                // localStorage.setItem("applyfriend", JSON.stringify(item));
+                // window.location.href = "applyFriend.html";
+
+                if (item.nowStatus == 2) {
+                    localStorage.setItem("applyfriend", JSON.stringify(item.data));
+                    window.location.href = "applyFriend.html";
+                } else if (item.nowStatus == 1) {
+                    if (item.addStatus == "PASS") {
+                        var data = {
+                            "friendUserId": item.data.id,
+                            "friendUserHeadUrl":item.data.userHeadUrl,
+                            "launch":item.data.launch,
+                            "nickName":item.data.userName,
+                            "verifyMsg":item.data.msgContent
+                        };
+                        localStorage.setItem("chatEmoji", JSON.stringify(data));
+                        window.location.href = "chatEmoji.html";
+                    } else {
+                        var data = {
+                            "friendUserId": item.data.id,
+                            "nickName": item.data.userName,
+                            "verifyMsg": item.msgContent,
+                        };
+                        localStorage.setItem("applyFriendBack", JSON.stringify(data));
+                        window.location.href = "applyFriendBack.html";
+                    }
+                }
+
+            },
+            goQunItem(item) {
+                if (item.nowStatus == 2) {
+                    var data = {
+                        "groupHeadUrl": item.data.groupHeadUrl,
+                        "groupName": item.data.groupName,
+                        "groupChatId": item.data.groupChatId,
+                        "groupNotice": item.data.groupNotice,
+                        "addStatus": item.addStatus
+                    };
+                    localStorage.setItem("group", JSON.stringify(data));
+                    window.location.href = "applyGroup.html";
+                } else if (item.nowStatus == 1) {
+                    if (item.addStatus == "PASS") {
+                        var data = {
+                            "groupChatId": item.data.groupChatId,
+                            "groupName": item.data.groupName,
+                            "groupHeadUrl": item.data.groupHeadUrl,
+                            "groupOnline": item.data.groupOnline,
+                            "groupNotice": item.data.groupNotice,
+                            "msgNum": item.data.msgNum,
+                            "addStatus": item.addStatus
+                        }
+                        localStorage.setItem("chatGroupEmoji", JSON.stringify(data));
+                        window.location.href = "chatGroupEmoji.html";
+                    }else if (item.addStatus == "CHECK") {
+                        var data = {
+                            "userId": userid,
+                            "groupChatId": item.data.groupChatId,
+                            "nickName": userid,
+                            "groupName": item.data.groupName,
+                            "userHeadUrl":  item.data.groupHeadUrl,
+                            "groupNotice": item.data.groupNotice,
+                            "addStatus": "CHECK"
+                        };
+                        localStorage.setItem("verifyGroupBack", JSON.stringify(data));
+                        window.location.href = "applyGroupBack.html";
+                    }else if (item.addStatus == "DOWN") {
+                        var data = {
+                            "userId": userid,
+                            "groupChatId": item.data.groupChatId,
+                            "nickName": userid,
+                            "groupName": item.data.groupName,
+                            "userHeadUrl":  item.data.groupHeadUrl,
+                            "groupNotice": item.data.groupNotice,
+                            "addStatus": "DOWN"
+                        };
+                        localStorage.setItem("verifyGroupBack", JSON.stringify(data));
+                        window.location.href = "applyGroupBack.html";
+                    }
+                }
+            },
+            goMsgItem(item) {
+                console.log(JSON.stringify(item));
+                if (item.nowStatus == 2) {
+                    localStorage.setItem("applyfriend", JSON.stringify(item.data));
+                    window.location.href = "applyFriend.html";
+                } else if (item.nowStatus == 1) {
+                    localStorage.setItem("chatEmoji", JSON.stringify(item.data));
+                    window.location.href = "chatEmoji.html";
+                }
+            }
+        }
+    });
+
+
+    $(".back").bind("click", function () {
+        localStorage.removeItem("stype");
+        backHis();
+    });
+
+    $("#sousuo").bind("input", function (e) {
+        var var_inp = $(this).val();
+        if (var_inp.trim() == "") {
+            $(".sousuoBtn").html("取消");
+            $(".icons").css("display", 'block')
+            $(".sousuoRes").css("display", 'none')
+        } else {
+            $(".sousuoBtn").html("搜索");
+        }
+    });
+
+
+    $(".sousuoBtn").bind("click", function (e) {
+        var var_inp = $("#sousuo").val();
+        if (var_inp.trim() == "") {
+            $(".icons").css("display", 'block')
+            $(".sousuoRes").css("display", 'none')
+            backHis();
+        } else {
+            $(".icons").css("display", 'none');
+            $(".sousuoRes").css("display", 'block');
+            selectFriend();
+        }
+    });
+
+    function selectFriend() {
+        var var_inp = $("#sousuo").val();
+        console.log("查询var_inp:" + var_inp);
+        var keyType = '';
+        for (var k = 0; k < iconsVue.iconsArr.length; k++) {
+            var obj = iconsVue.iconsArr[k];
+            if (obj.click) {
+                keyType += obj.keyType;
+            }
+        }
+
+        if (keyType == "") {
+            keyType = 0;
+        }
+
+
+        if (type == 0) {
+            //查询未成为好友/群
+           var data = {
+                "keyName": var_inp,
+                "keyType": keyType,
+                "addStatus": 2
+            };
+            //console.log("未添加的好友/群" + JSON.stringify(data));
+             seachFriendAndQunByApp(data);
+        } else if (type == 1) {
+            //查询已是好友/群
+           var data = {
+                "keyName": var_inp,
+                "keyType": keyType,
+                "addStatus": 1
+            };
+            //console.log("已添加的好友/群" + JSON.stringify(data));
+             seachFriendAndQunByApp(data);
+        }
+        
+    }
+
+
+</script>
+</body>
+</html>

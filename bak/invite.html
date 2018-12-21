@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>邀请好友</title>
+    <link href="../css/invite.css" rel="stylesheet">
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <style>
+        .sicon {
+            height: 20px;
+            width: 20px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img class="back" src="../img/nav_back_black.png">
+    <div class="msg">邀请好友</div>
+    <div class="rightIcon">
+        <div class="complete">完成</div>
+    </div>
+</header>
+<section>
+    <div class="flist">
+        <ul class="ulflist">
+            <li>
+                <img class="touxiang" src="../img/biaoqing3.png">
+                <div class="name">黄大仙</div>
+                <div class="selecticon"><img class="sicon" lang="0" onclick="selectMember(this)"
+                                             src="../img/weixuanzhong3.png"></div>
+            </li>
+
+            <li>
+                <img class="touxiang" src="../img/biaoqing3.png">
+                <div class="name">黄大仙</div>
+                <div class="selecticon"><img class="sicon" lang="0" onclick="selectMember(this)"
+                                             src="../img/weixuanzhong3.png"></div>
+            </li>
+
+            <li>
+                <img class="touxiang" src="../img/biaoqing3.png">
+                <div class="name">黄大仙</div>
+                <div class="selecticon"><img class="sicon" lang="0" onclick="selectMember(this)"
+                                             src="../img/weixuanzhong3.png"></div>
+            </li>
+
+
+            <li>
+                <img class="touxiang" src="../img/biaoqing3.png">
+                <div class="name">黄大仙</div>
+                <div class="selecticon"><img class="sicon" lang="0" onclick="selectMember(this)"
+                                             src="../img/weixuanzhong3.png"></div>
+            </li>
+
+            <li>
+                <img class="touxiang" src="../img/biaoqing3.png">
+                <div class="name">黄大仙</div>
+                <div class="selecticon"><img class="sicon" lang="0" onclick="selectMember(this)"
+                                             src="../img/weixuanzhong3.png"></div>
+            </li>
+
+        </ul>
+
+
+    </div>
+
+</section>
+<script>
+    function selectMember(el) {
+        var lang = $(el).attr("lang");
+        if (lang == 0) {
+            $(el).attr("src", "img/success3.png");
+            $(el).attr("lang", "1");
+        } else {
+            $(el).attr("src", "img/weixuanzhong3.png");
+            $(el).attr("lang", "0");
+        }
+    }
+
+</script>
+</body>
+</html>
